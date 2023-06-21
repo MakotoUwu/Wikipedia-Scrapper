@@ -120,7 +120,7 @@ leaders_per_country = get_leaders()
 #print(leaders_per_country)
 
 # Test get_first_paragraph function
-wikipedia_url = "https://en.wikipedia.org/wiki/Joe_Biden"
+wikipedia_url = "https://en.wikipedia.org/wiki/Jacque_Fresco"
 first_paragraph = get_first_paragraph(wikipedia_url)
 print(first_paragraph)
 
