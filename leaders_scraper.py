@@ -167,7 +167,7 @@ def get_first_paragraph(session, wikipedia_url):
     # Loop through all the paragraphs in the parsed HTML
     # The goal is to find the first meaningful (non-empty) paragraph
     for paragraph in soup.find_all('p'):
-        if len(paragraph.text.strip().split()) > 10:  # If the paragraph has more than 10 words
+        if len(paragraph.text.strip().split()) > 5:  # If the paragraph has more than 5 words
             first_paragraph = paragraph.text.strip()
 
             # Clean the first paragraph by removing all unwanted patterns
