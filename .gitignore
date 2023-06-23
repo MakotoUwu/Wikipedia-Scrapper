@@ -127,7 +127,6 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-wikipedia_scraper_env/
 
 # Ignore the wikipedia_scraper_env directory
 wikipedia_scraper_env/
