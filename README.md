@@ -20,7 +20,7 @@ To run this project, you need to have Python 3 installed on your machine. You al
 
 - re
 
-You can install them using pip or conda.
+You can install them using ```pip``` or ```conda```.
 
 ## Usage
 
