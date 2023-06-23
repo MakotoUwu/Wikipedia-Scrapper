@@ -141,7 +141,7 @@ def get_first_paragraph(session, wikipedia_url):
     Function that retrieves the first meaningful paragraph from a Wikipedia page and performs a clean-up
     operation to remove unwanted patterns.
     """
-
+    
     # List of regular expressions to be used for cleaning the paragraph.
     # Each regex is aimed at removing a specific unwanted pattern.
     regex_list = [
