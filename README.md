@@ -12,21 +12,22 @@ This project is part of the AI Bootcamp at BeCode.org.
 
 To run this project, you need to have Python 3 installed on your machine. You also need to install the following libraries and modules:
 
-- requests
+- ```requests```
 
-- json
+- ```json```
 
-- beautifulsoup4
+- ```beautifulsoup4```
 
-- re
+- ```re```
 
-You can install them using pip or conda.
+You can install them using ```pip``` or ```conda```.
 
 ## Usage
 
 To use this project, you first need to clone the repository. You can do this using the following commands:
 
 ```git clone https://github.com/your_username/wikipedia_scraper.git```
+
 ```cd wikipedia_scraper```
 
 Then, run the `main.py` file using the following command:
