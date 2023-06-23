@@ -61,22 +61,39 @@ def get_leaders():
 
         if leaders_response is not None:
             leaders = leaders_response.json()
-            leaders_with_paragraph = []
+            leaders_with_details = []
 
             # Loop through the leaders of each country
             for leader in leaders:
                 leader_url = leader["wikipedia_url"]
-                leader_first_paragraph = get_first_paragraph(session, leader_url)
+                leader_details = get_leader_details(session, leader_url)
 
-                leader_with_paragraph = leader.copy()
-                leader_with_paragraph["first_paragraph"] = leader_first_paragraph
-                leaders_with_paragraph.append(leader_with_paragraph)
+                leader_with_details = leader.copy()
+                leader_with_details.update(leader_details)
+                leaders_with_details.append(leader_with_details)
 
-            leaders_per_country[country] = leaders_with_paragraph
-        
+            leaders_per_country[country] = leaders_with_details
+
     save(leaders_per_country)
 
     return leaders_per_country
+
+def get_leader_details(session, wikipedia_url):
+    response = session.get(wikipedia_url)
+    response.raise_for_status()
+    soup = BeautifulSoup(response.text, "html.parser")
+
+    infobox = soup.find('table', {'class': 'infobox vcard'})
+    leader_details = {}
+
+    if infobox is not None:
+        for tr in infobox.find_all('tr'):
+            if tr.find('th') and tr.find('td'):
+                key = tr.find('th').text.strip()
+                value = tr.find('td').text.strip()
+                leader_details[key] = value
+
+    return leader_details
 
 def get_first_paragraph(session, wikipedia_url):
     # Code for retrieving the first paragraph from Wikipedia
@@ -88,7 +105,8 @@ def get_first_paragraph(session, wikipedia_url):
         r"\[[0-9]+\]",  # Matches a pattern that starts with an opening square bracket, followed by one or more digits, and ends with a closing square bracket.
         r"[\n]",  # Matches a newline character.
         r"[\t]",  # Matches a tab character.
-        r"[\xa0]"  # Matches a non-breaking space character.
+        r"[\xa0]",  # Matches a non-breaking space character.
+        r"\[[^\]]*\]", ##this pattern will remove phonetics, but not the brackets around them.
     ]
 
     response = session.get(wikipedia_url)
