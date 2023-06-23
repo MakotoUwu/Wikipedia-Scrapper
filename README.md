@@ -38,7 +38,7 @@ Then, run the `main.py` file using the following command:
 
 This project took ~3 days to complete
 
-### Personal situation
+## Personal situation
 
 This project was done by me as a solo challenge. I learned how to use requests, beautifulsoup4 and re modules to scrape data from websites and APIs. I also learned how to use json module to save and load data. I faced some challenges with finding the right regular expressions to sanitize the text and handling the cookie errors from the API. I solved them by using online tools and documentation. I enjoyed this project because it was fun and interesting to work with real-world data sources.
 
