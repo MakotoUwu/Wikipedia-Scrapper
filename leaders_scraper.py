@@ -2,13 +2,47 @@ import json
 import requests
 from bs4 import BeautifulSoup
 import re
+import time
+
+def greet_user():
+    """
+    Displays a greeting message, and explains the purpose of this script to the user.
+    """
+    print("\n===============================")
+    print("Hello! Welcome to our scraper!")
+    print("===============================")
+
+    print("""
+      / _ \\
+    \\_\\(_)/_/
+     _//"\\\\_  
+      /   \\ 
+    """)
+    
+    print("Scattering our cobwebs...") 
+    print("Please wait while we are scraping the data...\n")
+
 
 def save(leaders_per_country):
+    """
+    Saves the leaders' data to a json file, replacing None values with 'Unknown information'
+    """
+    # Replace None values with a default string
+    for country in leaders_per_country:
+        for leader in leaders_per_country[country]:
+            for key, value in leader.items():
+                if value is None:
+                    leader[key] = 'Unknown information'
+
     # Save leaders_per_country to leaders.json
-    with open('leaders.json', 'w') as f:
-        json.dump(leaders_per_country, f, indent=4, sort_keys=True)
+    with open('leaders.json', 'w', encoding='utf-8') as f:
+        json.dump(leaders_per_country, f, indent=4, sort_keys=True, ensure_ascii=False)
 
 def get_leaders():
+    """
+    Retrieves leaders' data from the given URL and stores them in a dictionary.
+    Also handles session cookies and HTTP errors.
+    """
     # Define the URLs
     root_url = "https://country-leaders.onrender.com"
     countries_url = root_url + "/countries"
@@ -38,6 +72,8 @@ def get_leaders():
     # Create an empty dictionary
     leaders_per_country = {}
 
+    start_time = time.time()  # Start the timer
+
     # Loop through the countries
     for country in countries:
         params = {"country": country}
@@ -57,84 +93,84 @@ def get_leaders():
 
         except requests.exceptions.HTTPError as e:
             print("An error occurred:", e)
-            # Handle the error accordingly, e.g., retry or log the error.
 
         if leaders_response is not None:
             leaders = leaders_response.json()
-            leaders_with_details = []
+            leaders_with_paragraph = []
 
             # Loop through the leaders of each country
             for leader in leaders:
                 leader_url = leader["wikipedia_url"]
-                leader_details = get_leader_details(session, leader_url)
+                leader_first_paragraph = get_first_paragraph(session, leader_url)
 
-                leader_with_details = leader.copy()
-                leader_with_details.update(leader_details)
-                leaders_with_details.append(leader_with_details)
+                leader_with_paragraph = leader.copy()
+                leader_with_paragraph["first_paragraph"] = leader_first_paragraph
+                leaders_with_paragraph.append(leader_with_paragraph)
 
-            leaders_per_country[country] = leaders_with_details
+            leaders_per_country[country] = leaders_with_paragraph
 
+            # Display message to the user
+            elapsed_time = time.time() - start_time
+            print(f"Scraped leaders for {country}. Elapsed time: {elapsed_time:.2f} seconds.")
+            time.sleep(1)  # Pause for 1 second to simulate processing time
+        
     save(leaders_per_country)
+
+    print("\nLeaders scraping completed.")
+    print("Your JSON file is ready.")
 
     return leaders_per_country
 
-def get_leader_details(session, wikipedia_url):
-    response = session.get(wikipedia_url)
-    response.raise_for_status()
-    soup = BeautifulSoup(response.text, "html.parser")
-
-    infobox = soup.find('table', {'class': 'infobox vcard'})
-    leader_details = {}
-
-    if infobox is not None:
-        for tr in infobox.find_all('tr'):
-            if tr.find('th') and tr.find('td'):
-                key = tr.find('th').text.strip()
-                value = tr.find('td').text.strip()
-                leader_details[key] = value
-
-    return leader_details
-
 def get_first_paragraph(session, wikipedia_url):
-    # Code for retrieving the first paragraph from Wikipedia
-
+    """
+    Retrieves and cleans the first paragraph from a given Wikipedia page
+    """
     # Regular expressions to remove unwanted patterns from the paragraph
     regex_list = [
-        r"\ *\(/.+/\[e\].*\)",  # Matches a pattern that starts with an optional space, followed by a forward slash, any character one or more times (except newline), followed by "/[e]", and then followed by any characters zero or more times.
-        r"\ *\(/.+/.*\)",  # Matches a pattern that starts with an optional space, followed by a forward slash, any character one or more times (except newline), and then followed by any characters zero or more times.
-        r"\[[0-9]+\]",  # Matches a pattern that starts with an opening square bracket, followed by one or more digits, and ends with a closing square bracket.
-        r"[\n]",  # Matches a newline character.
-        r"[\t]",  # Matches a tab character.
-        r"[\xa0]",  # Matches a non-breaking space character.
-        r"\[[^\]]*\]", ##this pattern will remove phonetics, but not the brackets around them.
+        r"\ *\(/.+/\[e\].*\)", # Matches any text within parentheses with "/[e]" inside and optionally preceded by a space
+        r"\ *\(/.+/.*\)", # Matches any text within parentheses optionally preceded by a space
+        r"\[[0-9]+\]", # Matches any text within square brackets that contains one or more digits
+        r"[\n]", # Matches a newline character
+        r"[\t]", # Matches a tab character
+        r"[\xa0]", # Matches a non-breaking space character
+        r"\[[^\]]*\]", # Matches any text within square brackets excluding the brackets
+        r"\(.*?\)", # Matches any text within parentheses
+        r'\\\"'  # Matches occurrences of \"
     ]
 
     response = session.get(wikipedia_url)
     html = response.text
     soup = BeautifulSoup(html, "html.parser")
-    
+
+    # Parse through the HTML using BeautifulSoup and extract the first paragraph of the article
     for paragraph in soup.find_all('p'):
         if paragraph.text.strip():
             first_paragraph = paragraph.text.strip()
 
+            # Clean the first paragraph using the regular expressions defined above
             for regex in regex_list:
                 pattern = re.compile(regex)
                 first_paragraph = re.sub(pattern, "", first_paragraph)
-                
+
             break
-    
+
     return first_paragraph
 
+def check_scraping():
+    greet_user()
 
+    # Scrape the data again
+    scraped_leaders = get_leaders()
 
-# Call the function (1 line)
-result = get_leaders()
-print(result)
+     # Read data from leaders.json
+    with open('leaders.json', 'r', encoding = "utf-8") as f:
+        saved_leaders = json.load(f)
 
-# Read data from leaders.json
-with open('leaders.json', 'r') as f:
-    saved_leaders = json.load(f)
+    # Check if the variables match
+    if saved_leaders == scraped_leaders:
+        print("\nSuccess! Scraping matched the saved data.")
+    else:
+        print("Error! Scraping didn't match the saved data. Try again.")
+    return saved_leaders == scraped_leaders
 
-# Check if the variables match
-print(saved_leaders == result)
-
+result = check_scraping()
