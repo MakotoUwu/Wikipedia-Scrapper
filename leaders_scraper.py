@@ -153,7 +153,8 @@ def get_first_paragraph(session, wikipedia_url):
         r"[\xa0]", # Matches a non-breaking space character
         r"\[[^\]]*\]", # Matches any text within square brackets excluding the brackets
         r"\(.*?\)", # Matches any text within parentheses
-        r'\\\"'  # Matches occurrences of \"
+        r'\\\"',  # Matches occurrences of \"
+        r"\(|\)"  # Matches any standalone parentheses
     ]
 
     # Request the content of the webpage
