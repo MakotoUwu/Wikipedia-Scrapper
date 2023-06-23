@@ -9,7 +9,7 @@ def greet_user():
     Displays a greeting messages to the user.
     """
     print("\n===============================")
-    print("Hello! Welcome to our scraper!")
+    print("Hello!👋 Welcome to our scraper!🕸️")
     print("===============================")
 
     print("""
@@ -18,9 +18,18 @@ def greet_user():
      _//"\\\\_  
       /   \\ 
     """)
+
+    print("\nThis script 📜 will scrape data from the website 'https://country-leaders.onrender.com'. "
+          "It will extract information 📑 about various leaders of different countries, including their names, roles, "
+          "country of leadership, and a link to their Wikipedia page 📖. For each leader, the script will also retrieve "
+          "the first paragraph from their respective Wikipedia page.\n")
+
+    print("The scraped data will be stored in a dictionary structure and saved into a JSON file named 'leaders.json'. "
+          "In this file, each country 🌍 is a key in the dictionary, and the corresponding value is a list of dictionaries, "
+          "where each dictionary represents a leader and their information.\n")
     
-    print("Scattering our cobwebs...\n") 
-    print("Please wait while we are scraping the data...\n")
+    print("Scattering our cobwebs...🕸️\n") 
+    print("Please wait while we are scraping the data...⏳\n")
 
 
 def save(leaders_per_country):
@@ -45,6 +54,8 @@ def save(leaders_per_country):
         # sort_keys=True sorts the keys alphabetically
         # ensure_ascii=False ensures that non-ASCII characters are saved correctly
         json.dump(leaders_per_country, f, indent=4, sort_keys=True, ensure_ascii=False)
+    
+    print("Data successfully saved! 📥")
 
 
 def get_leaders():
@@ -123,14 +134,14 @@ def get_leaders():
 
             # Print the progress for the user
             elapsed_time = time.time() - start_time
-            print(f"Scraped leaders for {country}. Elapsed time: {elapsed_time:.2f} seconds.")
+            print(f"Scraped leaders for {country}. Elapsed time: {elapsed_time:.2f} seconds⏳")
             time.sleep(1)  # Pause for 1 second to simulate processing time
 
     # Save the final dictionary to a file
     save(leaders_per_country)
 
-    print("\nLeaders scraping completed.")
-    print("Your JSON file is ready.")
+    print("\nLeaders scraping completed. ✅")
+    print("Your JSON file is ready. 📂")
 
     # Return the final dictionary
     return leaders_per_country
@@ -202,10 +213,10 @@ def check_scraping():
     # Check if the scraped data matches the saved data
     if saved_leaders == scraped_leaders:
         # If they match, print a success message
-        print("\nSuccess! Scraping matched the saved data.\n")
+        print("\nSuccess! ✅ Scraping matched the saved data. 🎉\n")
     else:
         # If they don't match, print an error message
-        print("Error! Scraping didn't match the saved data. Try again.")
+        print("Error! ❌ Scraping didn't match the saved data. Try again. 😢")
 
     # Return True if the scraped data matches the saved data, else False
     return saved_leaders == scraped_leaders
