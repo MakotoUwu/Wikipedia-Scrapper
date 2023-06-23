@@ -10,15 +10,17 @@ This project is part of the AI Bootcamp at BeCode.org.
 
 ## Installation
 
-To run this project, you need to have Python 3 installed on your machine. You also need to install the following libraries and modules:
+To run this project, you need to have Python 3 installed on your machine. You also need to install or import the following libraries and modules:
 
-- ```requests```
+- ```requests``` for handling HTTP requests.
 
-- ```json```
+- ```json```  for encoding and decoding JSON data.
 
-- ```beautifulsoup4```
+- ```beautifulsoup4``` for encoding and decoding JSON data.
 
-- ```re```
+- ```re``` for regular expressions.
+
+- `time`  for performance tracking.
 
 You can install them using ```pip``` or ```conda```.
 
