@@ -27,6 +27,7 @@ You can install them using pip or conda.
 To use this project, you first need to clone the repository. You can do this using the following commands:
 
 ```git clone https://github.com/your_username/wikipedia_scraper.git```
+
 ```cd wikipedia_scraper```
 
 Then, run the `main.py` file using the following command:
